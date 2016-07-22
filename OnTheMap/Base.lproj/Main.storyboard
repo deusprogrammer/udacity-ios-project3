@@ -35,7 +35,7 @@
                                     <action selector="loginClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bZq-R7-5z5"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please Login to Udacity" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="25" translatesAutoresizingMaskIntoConstraints="NO" id="QdE-1P-kGE">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please Login to Udacity" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="QdE-1P-kGE">
                                 <rect key="frame" x="39" y="38" width="523" height="48"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -44,18 +44,18 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="c5E-qS-S3j" firstAttribute="leading" secondItem="Xbw-Rx-x98" secondAttribute="leading" id="0lB-IC-FY4"/>
-                            <constraint firstItem="c5E-qS-S3j" firstAttribute="trailing" secondItem="Xbw-Rx-x98" secondAttribute="trailing" id="9Ca-rC-qwf"/>
-                            <constraint firstItem="QdE-1P-kGE" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="19" id="DuA-lb-Pqw"/>
-                            <constraint firstItem="Xbw-Rx-x98" firstAttribute="top" secondItem="c5E-qS-S3j" secondAttribute="bottom" constant="36" id="FLp-ui-wAX"/>
-                            <constraint firstItem="dtS-do-Jk6" firstAttribute="leading" secondItem="c5E-qS-S3j" secondAttribute="leading" id="KsN-UE-N0h"/>
-                            <constraint firstItem="dtS-do-Jk6" firstAttribute="trailing" secondItem="c5E-qS-S3j" secondAttribute="trailing" id="PoK-Ag-aRS"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Xbw-Rx-x98" secondAttribute="bottom" constant="234" id="QyM-Qv-JdU"/>
-                            <constraint firstItem="dtS-do-Jk6" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="50" id="XwP-qr-KfG"/>
-                            <constraint firstItem="c5E-qS-S3j" firstAttribute="top" secondItem="dtS-do-Jk6" secondAttribute="bottom" constant="42" id="aWk-bx-yP6"/>
-                            <constraint firstItem="QdE-1P-kGE" firstAttribute="centerX" secondItem="dtS-do-Jk6" secondAttribute="centerX" id="cIF-DJ-jfm"/>
-                            <constraint firstItem="QdE-1P-kGE" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="18" id="mgM-az-VJs"/>
-                            <constraint firstItem="QdE-1P-kGE" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="naB-dZ-Mf6"/>
+                            <constraint firstItem="c5E-qS-S3j" firstAttribute="leading" secondItem="Xbw-Rx-x98" secondAttribute="leading" id="GDo-iq-aAc"/>
+                            <constraint firstItem="c5E-qS-S3j" firstAttribute="centerX" secondItem="dtS-do-Jk6" secondAttribute="centerX" id="Tg4-ed-exk"/>
+                            <constraint firstItem="QdE-1P-kGE" firstAttribute="centerX" secondItem="dtS-do-Jk6" secondAttribute="centerX" id="Wco-ll-fSb"/>
+                            <constraint firstItem="dtS-do-Jk6" firstAttribute="top" secondItem="QdE-1P-kGE" secondAttribute="bottom" constant="112" id="Zyh-nj-EMs"/>
+                            <constraint firstItem="QdE-1P-kGE" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="g1P-mx-aKY"/>
+                            <constraint firstItem="QdE-1P-kGE" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="19" id="gMg-Qu-gJJ"/>
+                            <constraint firstItem="c5E-qS-S3j" firstAttribute="top" secondItem="dtS-do-Jk6" secondAttribute="bottom" constant="42" id="gbh-vi-QaX"/>
+                            <constraint firstItem="dtS-do-Jk6" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="50" id="kcY-Gz-uAd"/>
+                            <constraint firstItem="c5E-qS-S3j" firstAttribute="width" secondItem="dtS-do-Jk6" secondAttribute="width" id="rkt-im-Kbg"/>
+                            <constraint firstItem="QdE-1P-kGE" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="18" id="uMT-nX-gjI"/>
+                            <constraint firstItem="Xbw-Rx-x98" firstAttribute="width" secondItem="c5E-qS-S3j" secondAttribute="width" id="uj0-xd-Zsz"/>
+                            <constraint firstItem="Xbw-Rx-x98" firstAttribute="top" secondItem="c5E-qS-S3j" secondAttribute="bottom" constant="36" id="ux8-vI-E0y"/>
                         </constraints>
                     </view>
                     <connections>

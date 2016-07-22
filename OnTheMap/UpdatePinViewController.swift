@@ -9,16 +9,84 @@
 import UIKit
 import CoreLocation
 
-class UpdatePinViewController : UIViewController {
+class UpdatePinViewController : UIViewController, UITextFieldDelegate {
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
     @IBOutlet weak var cityStateField: UITextField!
     @IBOutlet weak var mediaUrlField: UITextField!
     @IBOutlet weak var updatePinButton: UIButton!
     
+    var screenShifted = false
+    var amountShifted : CGFloat = 0
+    
     override func viewWillAppear(animated: Bool) {
         self.cityStateField.text = self.appDelegate.myStudentLocation.mapString
         self.mediaUrlField.text = self.appDelegate.myStudentLocation.mediaUrl
+        self.cityStateField.delegate = self
+        self.mediaUrlField.delegate = self
+        
+        // Subscribe to keyboard notifications
+        self.subscribeToKeyboardNotifications()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        self.unsubscribeFromKeyboardNotifications()
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        // When the text field should return, resign the first responder
+        textField.resignFirstResponder()
+        return true;
+    }
+    
+    func subscribeToKeyboardNotifications() {
+        // Add keyboard show and hide observers
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector: #selector(LoginViewController.keyboardWillShow(_:)),
+            name: UIKeyboardWillShowNotification,
+            object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector: #selector(LoginViewController.keyboardWillHide(_:)),
+            name: UIKeyboardWillHideNotification,
+            object: nil)
+    }
+    
+    func unsubscribeFromKeyboardNotifications() {
+        // Remove keyboard show and hide observers
+        NSNotificationCenter.defaultCenter().removeObserver(
+            self,
+            name: UIKeyboardWillShowNotification,
+            object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(
+            self,
+            name: UIKeyboardWillHideNotification,
+            object: nil)
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        if (!screenShifted && mediaUrlField.isFirstResponder()) {
+            print("KEYBOARD SHOW")
+            screenShifted = true
+            amountShifted = getKeyboardHeight(notification)
+            self.view.frame.origin.y -= amountShifted
+        }
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        if (screenShifted && mediaUrlField.isFirstResponder()) {
+            print("KEYBOARD HIDE")
+            screenShifted = false
+            self.view.frame.origin.y += amountShifted
+        }
+    }
+    
+    func getKeyboardHeight(notification: NSNotification) -> CGFloat {
+        // Get keyboard height
+        let userInfo = notification.userInfo!
+        let keyboardSize = userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
+        return keyboardSize.CGRectValue().height
     }
     
     @IBAction func updateClicked(sender: AnyObject) {
