@@ -24,11 +24,7 @@ class OTMapTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("TableViewCell")!
         let location = self.appDelegate.studentLocations[indexPath.row]
         
-        if (location.uniqueKey == self.appDelegate.uniqueKey) {
-            cell.textLabel?.text = "\(location.lastName), \(location.firstName) (You)"
-        } else {
-            cell.textLabel?.text = "\(location.lastName), \(location.firstName)"
-        }
+        cell.textLabel?.text = "\(location.lastName), \(location.firstName)"
         
         return cell
     }

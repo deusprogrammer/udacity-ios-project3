@@ -9,7 +9,7 @@
         <!--Login View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="LoginViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" id="BYZ-38-t0r" customClass="LoginViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -146,6 +146,79 @@
             </objects>
             <point key="canvasLocation" x="-232" y="1065"/>
         </scene>
+        <!--Map Geocoder View Controller-->
+        <scene sceneID="Kib-ws-57d">
+            <objects>
+                <viewController storyboardIdentifier="OTMapGeocoderViewController" id="ykl-Wr-lgn" customClass="OTMapGeocoderViewController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="6lo-0a-ALf"/>
+                        <viewControllerLayoutGuide type="bottom" id="jCj-Fu-7ZZ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="H8r-XZ-Zsm">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="8xw-dj-qw4">
+                                <rect key="frame" x="0.0" y="254" width="600" height="346"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="346" id="7gQ-0p-uF1"/>
+                                </constraints>
+                            </mapView>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="http://yourhomepage.com" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uaf-Oj-yN3">
+                                <rect key="frame" x="44" y="80" width="512" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Would you like to add your homepage?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CFD-x9-eCV">
+                                <rect key="frame" x="152" y="28" width="296" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="chs-wo-ouD">
+                                <rect key="frame" x="44" y="165" width="512" height="30"/>
+                                <state key="normal" title="Cancel"/>
+                                <connections>
+                                    <action selector="cancelClicked:" destination="ykl-Wr-lgn" eventType="touchUpInside" id="srj-u7-iYv"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nq3-nM-ap1">
+                                <rect key="frame" x="44" y="127" width="512" height="30"/>
+                                <state key="normal" title="Update Pin"/>
+                                <connections>
+                                    <action selector="updateButtonClicked:" destination="ykl-Wr-lgn" eventType="touchUpInside" id="2M1-F9-FlE"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="chs-wo-ouD" firstAttribute="width" secondItem="Nq3-nM-ap1" secondAttribute="width" id="3Tg-TQ-Bjc"/>
+                            <constraint firstItem="chs-wo-ouD" firstAttribute="centerX" secondItem="H8r-XZ-Zsm" secondAttribute="centerX" id="4bg-Qx-rTW"/>
+                            <constraint firstItem="Nq3-nM-ap1" firstAttribute="width" secondItem="uaf-Oj-yN3" secondAttribute="width" id="6fr-GV-FJ1"/>
+                            <constraint firstItem="Nq3-nM-ap1" firstAttribute="top" secondItem="uaf-Oj-yN3" secondAttribute="bottom" constant="17" id="7kl-6v-W42"/>
+                            <constraint firstItem="CFD-x9-eCV" firstAttribute="top" secondItem="6lo-0a-ALf" secondAttribute="bottom" constant="8" id="8Lf-K1-OWy"/>
+                            <constraint firstItem="uaf-Oj-yN3" firstAttribute="width" secondItem="H8r-XZ-Zsm" secondAttribute="width" constant="-88" id="Hmy-4J-Rs3"/>
+                            <constraint firstItem="jCj-Fu-7ZZ" firstAttribute="top" secondItem="8xw-dj-qw4" secondAttribute="bottom" id="L8Z-te-kG2"/>
+                            <constraint firstItem="chs-wo-ouD" firstAttribute="top" secondItem="Nq3-nM-ap1" secondAttribute="bottom" constant="8" id="fzD-XD-IM4"/>
+                            <constraint firstItem="uaf-Oj-yN3" firstAttribute="centerX" secondItem="H8r-XZ-Zsm" secondAttribute="centerX" id="iYj-vp-M3k"/>
+                            <constraint firstItem="Nq3-nM-ap1" firstAttribute="centerX" secondItem="H8r-XZ-Zsm" secondAttribute="centerX" id="kmg-ON-Fp7"/>
+                            <constraint firstItem="CFD-x9-eCV" firstAttribute="centerX" secondItem="H8r-XZ-Zsm" secondAttribute="centerX" id="m9f-5Q-Jtf"/>
+                            <constraint firstItem="uaf-Oj-yN3" firstAttribute="top" secondItem="CFD-x9-eCV" secondAttribute="bottom" constant="31" id="tfg-9z-JVw"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="8xw-dj-qw4" secondAttribute="trailing" constant="-20" id="wLh-5X-IeC"/>
+                            <constraint firstItem="8xw-dj-qw4" firstAttribute="leading" secondItem="H8r-XZ-Zsm" secondAttribute="leadingMargin" constant="-20" id="zGx-P1-ci9"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cancelButton" destination="chs-wo-ouD" id="bw0-rH-oLz"/>
+                        <outlet property="mapView" destination="8xw-dj-qw4" id="b0T-pg-dh0"/>
+                        <outlet property="mediaUrlField" destination="uaf-Oj-yN3" id="dHR-Fk-oso"/>
+                        <outlet property="updatePinButton" destination="Nq3-nM-ap1" id="pkP-yU-8bX"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SJe-oO-ep2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-17" y="1889"/>
+        </scene>
         <!--Update Pin View Controller-->
         <scene sceneID="CAZ-EG-8jF">
             <objects>
@@ -164,18 +237,13 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PUf-X9-NgR">
-                                <rect key="frame" x="262" y="443" width="76" height="30"/>
-                                <state key="normal" title="Update Pin"/>
+                                <rect key="frame" x="258" y="443" width="85" height="30"/>
+                                <state key="normal" title="Find on Map"/>
                                 <connections>
                                     <action selector="updateClicked:" destination="aeJ-Ky-jhs" eventType="touchUpInside" id="XDs-cR-edP"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="http://yourmediaurl.com" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Pnj-N3-ThC">
-                                <rect key="frame" x="72" y="330" width="457" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Where are you Studying Today?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="VkP-Ze-yYy">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Where are you Studying Today?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="VkP-Ze-yYy">
                                 <rect key="frame" x="43" y="45" width="514" height="43"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="36"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -184,28 +252,24 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="PUf-X9-NgR" firstAttribute="top" secondItem="Pnj-N3-ThC" secondAttribute="bottom" constant="83" id="Ccj-6W-cpM"/>
-                            <constraint firstItem="Pnj-N3-ThC" firstAttribute="top" secondItem="MUH-1i-DZW" secondAttribute="bottom" constant="35" id="DKi-Yg-Dj0"/>
-                            <constraint firstItem="MUH-1i-DZW" firstAttribute="top" secondItem="D5N-UL-owq" secondAttribute="top" constant="265" id="Dne-fW-6kg"/>
-                            <constraint firstItem="PUf-X9-NgR" firstAttribute="centerX" secondItem="Pnj-N3-ThC" secondAttribute="centerX" id="S4Y-Ro-eX9"/>
-                            <constraint firstItem="Pnj-N3-ThC" firstAttribute="width" secondItem="MUH-1i-DZW" secondAttribute="width" id="TDO-H8-I55"/>
-                            <constraint firstItem="MUH-1i-DZW" firstAttribute="leading" secondItem="D5N-UL-owq" secondAttribute="leadingMargin" constant="52" id="f7E-Nn-q07"/>
-                            <constraint firstItem="VkP-Ze-yYy" firstAttribute="leading" secondItem="D5N-UL-owq" secondAttribute="leadingMargin" constant="23" id="gKL-7s-e38"/>
-                            <constraint firstItem="Pnj-N3-ThC" firstAttribute="leading" secondItem="MUH-1i-DZW" secondAttribute="leading" id="iEG-bR-YUz"/>
-                            <constraint firstItem="VkP-Ze-yYy" firstAttribute="centerX" secondItem="MUH-1i-DZW" secondAttribute="centerX" id="mPh-Tg-FFf"/>
-                            <constraint firstItem="VkP-Ze-yYy" firstAttribute="top" secondItem="Joa-jw-21t" secondAttribute="bottom" constant="25" id="rpl-e7-t7D"/>
-                            <constraint firstItem="VkP-Ze-yYy" firstAttribute="centerX" secondItem="D5N-UL-owq" secondAttribute="centerX" id="vDc-5z-xYf"/>
+                            <constraint firstItem="MUH-1i-DZW" firstAttribute="centerX" secondItem="PUf-X9-NgR" secondAttribute="centerX" id="1gz-g9-6i1"/>
+                            <constraint firstItem="VkP-Ze-yYy" firstAttribute="leading" secondItem="D5N-UL-owq" secondAttribute="leadingMargin" constant="23" id="8j5-J5-OR0"/>
+                            <constraint firstItem="K9B-cd-6ch" firstAttribute="top" secondItem="PUf-X9-NgR" secondAttribute="bottom" constant="127" id="9F7-eE-tTh"/>
+                            <constraint firstItem="VkP-Ze-yYy" firstAttribute="centerX" secondItem="MUH-1i-DZW" secondAttribute="centerX" id="Ecv-hZ-ds1"/>
+                            <constraint firstItem="VkP-Ze-yYy" firstAttribute="centerX" secondItem="D5N-UL-owq" secondAttribute="centerX" id="OWb-Eg-6vU"/>
+                            <constraint firstItem="VkP-Ze-yYy" firstAttribute="top" secondItem="Joa-jw-21t" secondAttribute="bottom" constant="25" id="UGn-pt-T90"/>
+                            <constraint firstItem="MUH-1i-DZW" firstAttribute="leading" secondItem="D5N-UL-owq" secondAttribute="leadingMargin" constant="52" id="UUF-ic-PPM"/>
+                            <constraint firstItem="MUH-1i-DZW" firstAttribute="top" secondItem="D5N-UL-owq" secondAttribute="top" constant="265" id="xG7-m6-ilU"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="cityStateField" destination="MUH-1i-DZW" id="PVA-v9-2a1"/>
-                        <outlet property="mediaUrlField" destination="Pnj-N3-ThC" id="JeI-Jx-crn"/>
                         <outlet property="updatePinButton" destination="PUf-X9-NgR" id="IvB-BM-IGP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tga-9i-A8e" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="662" y="1889"/>
+            <point key="canvasLocation" x="-688" y="1889"/>
         </scene>
         <!--Map Tab Bar Controller-->
         <scene sceneID="Pwn-I1-ORh">
@@ -217,9 +281,9 @@
                                 <action selector="addPinClicked:" destination="a7N-Tp-qpa" id="oAY-2q-QCx"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Refresh" id="Crd-aK-Y19" userLabel="Bar Button Item">
+                        <barButtonItem key="rightBarButtonItem" title="Logout" id="Crd-aK-Y19" userLabel="Bar Button Item">
                             <connections>
-                                <action selector="refreshClicked:" destination="a7N-Tp-qpa" id="Ok3-4m-Cx7"/>
+                                <action selector="logoutClicked:" destination="a7N-Tp-qpa" id="gcE-fi-L6c"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

@@ -8,8 +8,68 @@
 
 import Foundation
 
+class JSONHelper {
+    class func serialize(obj: AnyObject) -> String! {
+        do {
+            let jsonData = try NSJSONSerialization.dataWithJSONObject(obj, options: .PrettyPrinted)
+            return NSString(data: jsonData, encoding: NSUTF8StringEncoding) as String!
+        } catch {
+            return nil
+        }
+    }
+    
+    class func search(path: String, object: Any) -> Any! {
+        let pathComponents : Array<String> = path.componentsSeparatedByString("/")
+        var currentNode : Any = object
+        
+        for pathComponent in pathComponents {
+            if (pathComponent.isEmpty) {
+                continue
+            }
+            
+            let indexStart = pathComponent.characters.indexOf("[")
+            let indexEnd   = pathComponent.characters.indexOf("]")
+            
+            if (indexStart != nil && indexEnd != nil) {
+                let pathComponentName = pathComponent.substringToIndex(indexStart!)
+                let pathComponentIndex = pathComponent.substringWithRange((indexStart!.advancedBy(1)..<indexEnd!))
+                
+                if (!pathComponentName.isEmpty) {
+                    // Go to dictionary entry
+                    if (!(currentNode is Dictionary<String, AnyObject>)) {
+                        return nil
+                    }
+                    
+                    
+                    let d = currentNode as! Dictionary<String, AnyObject>
+                    currentNode = d[pathComponentName]
+                }
+                
+                
+                // Go to array element
+                if (!(currentNode is Array<Any>)) {
+                    return nil
+                }
+                
+                let a = currentNode as! Array<Any>
+                currentNode = a[(pathComponentIndex as NSString).integerValue]
+            } else {
+                // Go to dictionary entry
+                if (!(currentNode is Dictionary<String, AnyObject>)) {
+                    return nil
+                }
+                
+                let d = currentNode as! Dictionary<String, AnyObject>
+                currentNode = d[pathComponent]
+            }
+        }
+        
+        return currentNode
+    }
+}
+
 // A class for containing student locations
-class StudentLocation : NBMappable {
+class StudentLocation {
     var uniqueKey : String!
     var objectId  : String!
     var firstName : String!
@@ -18,9 +78,10 @@ class StudentLocation : NBMappable {
     var mapString : String!
     var longtitude : Double!
     var latitude : Double!
+    var updatedAt : String!
     
     // Serialize this object into a Dictionary
-    func serialize() -> Dictionary<String, Any> {
+    func serialize() -> Dictionary<String, AnyObject> {
         return [
             "uniqueKey" : self.uniqueKey,
             "firstName" : self.firstName,
@@ -28,12 +89,13 @@ class StudentLocation : NBMappable {
             "mediaURL"  : self.mediaUrl,
             "mapString" : self.mapString,
             "latitude"  : self.latitude,
-            "longitude" : self.longtitude
+            "longitude" : self.longtitude,
+            "updatedAt" : self.updatedAt
         ]
     }
     
     // Deserialize supplied map into this object
-    func deserialize(map: Dictionary<String, Any>) {
+    func deserialize(map: Dictionary<String, AnyObject>) {
         self.objectId   = map["objectId"]  as! String
         self.uniqueKey  = map["uniqueKey"] as! String
         self.firstName  = map["firstName"] as! String
@@ -42,14 +104,11 @@ class StudentLocation : NBMappable {
         self.mapString  = map["mapString"] as! String
         self.latitude   = map["latitude"]  as! Double
         self.longtitude = map["longitude"] as! Double
+        self.updatedAt  = map["updatedAt"] as! String
     }
 }
 
 class UdacityClient {
-    init() {
-        NBRestClient.setupDefaults()
-    }
-    
     func getUserData(
         userId: String,
         onComplete: ((payload: Any) -> Void)! = nil,
@@ -77,6 +136,22 @@ class UdacityClient {
                 return
             }
             
+            // Deserialize json
+            var data : AnyObject! = nil
+            do {
+                try data = NSJSONSerialization.JSONObjectWithData(response.body.subdataWithRange(NSRange(location: 4, length: response.body.length - 4)), options: .AllowFragments)
+            } catch {
+                if (onError != nil) {
+                    onError(
+                        statusCode: 0,
+                        payload: [
+                            "errorMessage": response.error?.localizedDescription
+                        ]
+                    )
+                }
+                return
+            }
+            
             print("Status Code:  \(response.statusCode)")
             
             // If status code not 200, then fail
@@ -85,7 +160,7 @@ class UdacityClient {
                 if (onError != nil) {
                     onError(
                         statusCode: response.statusCode,
-                        payload: response.body
+                        payload: data
                     )
                 }
                 return
@@ -93,8 +168,82 @@ class UdacityClient {
             
             // Run call back if one was provided
             if (onComplete != nil) {
-                onComplete(payload: response.body)
+                onComplete(payload: data)
             }
+        })
+    }
+    
+    func logout(
+        onComplete onComplete: ((payload: Any) -> Void)! = nil,
+        onError: ((statusCode: Int, payload: Any) -> Void)! = nil) {
+        
+        var xsrfCookie: NSHTTPCookie? = nil
+        let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+        for cookie in sharedCookieStorage.cookies! {
+            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
+        }
+        
+        let request = NBRestClient.delete(
+            hostname: "www.udacity.com",
+            uri: "/api/session",
+            ssl: true)
+        
+        if let xsrfCookie = xsrfCookie {
+            request.addHeader("X-XSRF-TOKEN", value: xsrfCookie.value)
+        }
+        
+        request.setAcceptType(NBRestClient.NBMediaType.APPLICATION_JSON)
+        
+        request.sendAsync({(response: NBRestResponse!) -> Void in
+            // If error is set, display it and fail
+            if (response.error != nil) {
+                print(response.error?.localizedDescription)
+                if (onError != nil) {
+                    onError(
+                        statusCode: 0,
+                        payload: [
+                            "errorMessage": response.error?.localizedDescription
+                        ]
+                    )
+                }
+                return
+            }
+            
+            // Deserialize json
+            var data : AnyObject! = nil
+            do {
+                try data = NSJSONSerialization.JSONObjectWithData(response.body.subdataWithRange(NSRange(location: 4, length: response.body.length - 4)), options: .AllowFragments)
+            } catch {
+                if (onError != nil) {
+                    onError(
+                        statusCode: 0,
+                        payload: [
+                            "errorMessage": response.error?.localizedDescription
+                        ]
+                    )
+                }
+                return
+            }
+            
+            print("Status Code:  \(response.statusCode)")
+            
+            // If status code not 200, then fail
+            if (response.statusCode != 200) {
+                print("HTTP request failed")
+                if (onError != nil) {
+                    onError(
+                        statusCode: response.statusCode,
+                        payload: data
+                    )
+                }
+                return
+            }
+            
+            // Run call back if one was provided
+            if (onComplete != nil) {
+                onComplete(payload: data)
+            }
+
         })
     }
     
@@ -104,17 +253,15 @@ class UdacityClient {
         onComplete: ((payload: Any) -> Void)! = nil,
         onError: ((statusCode: Int, payload: Any) -> Void)! = nil) {
         
-        let credentials : Dictionary<String, Any> = [
-            "username": username,
-            "password": password
-        ]
-        
         let request = NBRestClient.post(
             hostname: "www.udacity.com",
             uri: "/api/session",
-            body: [
-                "udacity": credentials
-            ],
+            body: JSONHelper.serialize([
+                "udacity": [
+                    "username": username,
+                    "password": password
+                    ]
+                ]),
             ssl: true)
         
         request.setContentType(NBRestClient.NBMediaType.APPLICATION_JSON)
@@ -136,6 +283,22 @@ class UdacityClient {
                 return
             }
             
+            // Deserialize json
+            var data : AnyObject! = nil
+            do {
+                try data = NSJSONSerialization.JSONObjectWithData(response.body.subdataWithRange(NSRange(location: 4, length: response.body.length - 4)), options: .AllowFragments)
+            } catch {
+                if (onError != nil) {
+                    onError(
+                        statusCode: 0,
+                        payload: [
+                            "errorMessage": response.error?.localizedDescription
+                        ]
+                    )
+                }
+                return
+            }
+            
             print("Status Code:  \(response.statusCode)")
             
             // If status code not 200, then fail
@@ -144,7 +307,7 @@ class UdacityClient {
                 if (onError != nil) {
                     onError(
                         statusCode: response.statusCode,
-                        payload: response.body
+                        payload: data
                     )
                 }
                 return
@@ -152,7 +315,7 @@ class UdacityClient {
             
             // Run call back if one was provided
             if (onComplete != nil) {
-                onComplete(payload: response.body)
+                onComplete(payload: data)
             }
         })
     }
@@ -179,9 +342,6 @@ class UdacityParseClient {
         self.hostname = hostname
         self.port = port
         self.ssl = ssl
-        
-        // Set object mappers to default
-        NBRestClient.setupDefaults()
     }
     
     // Update a student object (must have an object id set)
@@ -205,7 +365,7 @@ class UdacityParseClient {
                 "X-Parse-Application-Id": self.appId,
                 "X-Parse-REST-API-Key": self.apiKey
             ],
-            body: location.serialize(),
+            body: JSONHelper.serialize(location.serialize()),
             ssl: self.ssl)
         
         // Set accept-type and content-type
@@ -229,6 +389,22 @@ class UdacityParseClient {
                 return
             }
             
+            // Deserialize json
+            var data : AnyObject! = nil
+            do {
+                try data = NSJSONSerialization.JSONObjectWithData(response.body, options: .AllowFragments)
+            } catch {
+                if (onError != nil) {
+                    onError(
+                        statusCode: 0,
+                        payload: [
+                            "errorMessage": response.error?.localizedDescription
+                        ]
+                    )
+                }
+                return
+            }
+            
             print("Status Code:  \(response.statusCode)")
             
             // If status code not 200, then fail
@@ -237,7 +413,7 @@ class UdacityParseClient {
                 if (onError != nil) {
                     onError(
                         statusCode: response.statusCode,
-                        payload: response.body
+                        payload: data
                     )
                 }
                 return
@@ -264,7 +440,7 @@ class UdacityParseClient {
                 "X-Parse-Application-Id": self.appId,
                 "X-Parse-REST-API-Key": self.apiKey
             ],
-            body: location.serialize(),
+            body: JSONHelper.serialize(location.serialize()),
             ssl: self.ssl)
         
         request.setAcceptType(NBRestClient.NBMediaType.APPLICATION_JSON)
@@ -287,6 +463,22 @@ class UdacityParseClient {
                 return
             }
             
+            // Deserialize json
+            var data : AnyObject! = nil
+            do {
+                try data = NSJSONSerialization.JSONObjectWithData(response.body, options: .AllowFragments)
+            } catch {
+                if (onError != nil) {
+                    onError(
+                        statusCode: 0,
+                        payload: [
+                            "errorMessage": response.error?.localizedDescription
+                        ]
+                    )
+                }
+                return
+            }
+            
             print("Status Code:  \(response.statusCode)")
             
             // If status code not 201, then fail
@@ -295,14 +487,14 @@ class UdacityParseClient {
                 if (onError != nil) {
                     onError(
                         statusCode: response.statusCode,
-                        payload: response.body
+                        payload: data
                     )
                 }
                 return
             }
             
             // Parse result and update location object with object id
-            var result = response.body as! Dictionary<String, Any>
+            var result = data as! Dictionary<String, AnyObject>
             location.objectId = result["objectId"] as! String
             
             // Run call back if one was provided
@@ -318,11 +510,11 @@ class UdacityParseClient {
         onError: ((statusCode: Int, payload: Any) -> Void)! = nil
         ) {
         
-        let whereQueryMap : Dictionary<String, Any> = [
+        let whereQueryMap = [
             "uniqueKey": uniqueKey
         ]
         
-        let whereQuery : String = NBJSON.Parser.serialize(whereQueryMap).stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!
+        let whereQuery : String = JSONHelper.serialize(whereQueryMap).stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!
         
         let request = NBRestClient.get(
             hostname: self.hostname,
@@ -356,6 +548,22 @@ class UdacityParseClient {
                 return
             }
             
+            // Deserialize json
+            var data : AnyObject! = nil
+            do {
+                try data = NSJSONSerialization.JSONObjectWithData(response.body, options: .AllowFragments)
+            } catch {
+                if (onError != nil) {
+                    onError(
+                        statusCode: 0,
+                        payload: [
+                            "errorMessage": response.error?.localizedDescription
+                        ]
+                    )
+                }
+                return
+            }
+            
             print("Status Code:  \(response.statusCode)")
             
             // If status code not 201, then fail
@@ -364,14 +572,14 @@ class UdacityParseClient {
                 if (onError != nil) {
                     onError(
                         statusCode: response.statusCode,
-                        payload: response.body
+                        payload: data
                     )
                 }
                 return
             }
             
             // Acquire the results from the results key at the root of the returned object
-            let results = NBJSON.Utils.search("/results", object: response.body) as! Array<Any>
+            let results = JSONHelper.search("/results", object: data) as! Array<AnyObject>
             
             // On no results
             if (results.count <= 0) {
@@ -383,7 +591,7 @@ class UdacityParseClient {
             }
             
             let location = StudentLocation()
-            location.deserialize(results[0] as! Dictionary<String, Any>)
+            location.deserialize(results[0] as! Dictionary<String, AnyObject>)
             
             // Run call back if one was provided
             if (onComplete != nil) {
@@ -437,6 +645,24 @@ class UdacityParseClient {
                 return
             }
             
+            // Deserialize json
+            var data : AnyObject! = nil
+            do {
+                try data = NSJSONSerialization.JSONObjectWithData(response.body, options: .AllowFragments)
+            } catch {
+                if (onError != nil) {
+                    onError(
+                        statusCode: 0,
+                        page: page,
+                        pageSize: pageSize,
+                        payload: [
+                            "errorMessage": response.error?.localizedDescription
+                        ]
+                    )
+                }
+                return
+            }
+            
             print("Status Code:  \(response.statusCode)")
             
             // If status code not 200, then fail
@@ -447,14 +673,14 @@ class UdacityParseClient {
                         statusCode: response.statusCode,
                         page: page,
                         pageSize: pageSize,
-                        payload: response.body
+                        payload: data
                     )
                 }
                 return
             }
             
             // Acquire the results from the results key at the root of the returned object
-            let results = NBJSON.Utils.search("/results", object: response.body) as! Array<Any>
+            let results = JSONHelper.search("/results", object: data) as! Array<AnyObject>
             
             // If there are no results, then quit
             if (results.count <= 0) {
@@ -467,7 +693,7 @@ class UdacityParseClient {
             // Deserialize the payload into an array of StudentLocations
             var locations : Array<StudentLocation> = []
             for anyResult in results {
-                let result = anyResult as! Dictionary<String, Any>
+                let result = anyResult as! Dictionary<String, AnyObject>
                 if result.isEmpty {
                     continue
                 }

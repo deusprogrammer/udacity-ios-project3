@@ -8,15 +8,6 @@
 
 import UIKit
 
-class OTMapWebViewController: UIViewController {
-    @IBOutlet weak var webView: UIWebView!
-    var urlToLoad : NSURL!
-    
-    override func viewDidLoad() {
-        webView.loadRequest(NSURLRequest(URL: urlToLoad))
-    }
-}
-
 class OTMapTabBarController : UITabBarController {
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
@@ -24,8 +15,27 @@ class OTMapTabBarController : UITabBarController {
         refreshLocations()
     }
     
-    @IBAction func refreshClicked(sender: AnyObject) {
-        refreshLocations()
+    @IBAction func logoutClicked(sender: AnyObject) {
+        let udacityClient = UdacityClient()
+        udacityClient.logout(
+            onComplete: {(payload: Any) -> Void in
+                dispatch_async(dispatch_get_main_queue()) {
+                    let viewController = self.storyboard?.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
+                    self.presentViewController(viewController, animated: true, completion: nil)
+                }
+            },
+            onError: {(statusCode: Int, payload: Any) -> Void in
+                var errorObject = payload as! Dictionary<String, AnyObject>
+                let error = errorObject["error"] as! String
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    let alertController = UIAlertController(title: "Logout Failure", message: error, preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                    alertController.addAction(OKAction)
+                    
+                    self.presentViewController(alertController, animated: true, completion: nil)
+                }
+            })
     }
     
     @IBAction func addPinClicked(sender: AnyObject) {
@@ -49,22 +59,34 @@ class OTMapTabBarController : UITabBarController {
             appId: "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr",
             apiKey: "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY")
         
-        parseClient.getAllStudentLocations(
-            onComplete: {(locations: Array<StudentLocation>!) -> Void in
-                self.appDelegate.studentLocations = locations.sort {(e1, e2) -> Bool in
-                    return e1.lastName < e2.lastName
-                }
+        parseClient.getStudentLocationById(
+            self.appDelegate.uniqueKey,
+            onComplete: {(location: StudentLocation!) -> Void in
+                self.appDelegate.myStudentLocation = location
                 
-                for location in locations {
-                    if (location.uniqueKey == self.appDelegate.uniqueKey) {
-                        self.appDelegate.myStudentLocation = location
-                        break
+                parseClient.getAllStudentLocations(
+                    onComplete: {(locations: Array<StudentLocation>!) -> Void in
+                        self.appDelegate.studentLocations = locations
+                        
+                        // Notify on completion
+                        NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "trinary.locationsUpdated", object: nil))
+                    },
+                    onError: {(statusCode: Int, page: Int, pageSize: Int, payload: Any) -> Void in
+                        var errorObject = payload as! Dictionary<String, AnyObject>
+                        let error = errorObject["error"] as! String
+                        
+                        dispatch_async(dispatch_get_main_queue()) {
+                            let alertController = UIAlertController(title: "Network Failure", message: error, preferredStyle: .Alert)
+                            let OKAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                            alertController.addAction(OKAction)
+                            
+                            self.presentViewController(alertController, animated: true, completion: nil)
+                        }
                     }
-                }
-                
-                // Notify on completion
-                NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "trinary.locationsUpdated", object: nil))
-        })
-
+                )
+            },
+            onError: {(statusCode: Int, payload: Any) -> Void in
+                print(payload)
+            })
     }
 }

@@ -83,11 +83,7 @@ class OTMapViewController : UIViewController, MKMapViewDelegate {
             // Here we create the annotation and set its coordiate, title, and subtitle properties
             let annotation = MKPointAnnotation()
             annotation.coordinate = coordinate
-            if (location.uniqueKey == self.appDelegate.uniqueKey) {
-                annotation.title = "\(location.lastName), \(location.firstName) (You)"
-            } else {
-                annotation.title = "\(location.lastName), \(location.firstName)"
-            }
+            annotation.title = "\(location.lastName), \(location.firstName)"
             annotation.subtitle = location.mediaUrl
             
             // Finally we place the annotation in an array of annotations.
