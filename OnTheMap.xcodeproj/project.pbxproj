@@ -19,7 +19,6 @@
 		59C1EE211D41AA8900B9C1B4 /* UpdatePinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C1EE201D41AA8900B9C1B4 /* UpdatePinViewController.swift */; };
 		59C1EE251D41AC9C00B9C1B4 /* OTMapTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C1EE241D41AC9C00B9C1B4 /* OTMapTabBarController.swift */; };
 		59C1EE271D41BAF600B9C1B4 /* OTMapTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C1EE261D41BAF600B9C1B4 /* OTMapTableViewController.swift */; };
-		59C1EE2B1D41EAB600B9C1B4 /* NBJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C1EE281D41EAB600B9C1B4 /* NBJson.swift */; };
 		59C1EE2C1D41EAB600B9C1B4 /* NBRestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C1EE291D41EAB600B9C1B4 /* NBRestClient.swift */; };
 		59C1EE2D1D41EAB600B9C1B4 /* UdacityParseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C1EE2A1D41EAB600B9C1B4 /* UdacityParseClient.swift */; };
 /* End PBXBuildFile section */
@@ -60,7 +59,6 @@
 		59C1EE201D41AA8900B9C1B4 /* UpdatePinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdatePinViewController.swift; sourceTree = "<group>"; };
 		59C1EE241D41AC9C00B9C1B4 /* OTMapTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMapTabBarController.swift; sourceTree = "<group>"; };
 		59C1EE261D41BAF600B9C1B4 /* OTMapTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMapTableViewController.swift; sourceTree = "<group>"; };
-		59C1EE281D41EAB600B9C1B4 /* NBJson.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NBJson.swift; sourceTree = "<group>"; };
 		59C1EE291D41EAB600B9C1B4 /* NBRestClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NBRestClient.swift; sourceTree = "<group>"; };
 		59C1EE2A1D41EAB600B9C1B4 /* UdacityParseClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityParseClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -147,7 +145,6 @@
 		59493CD21D41509E008BE38A /* REST Client */ = {
 			isa = PBXGroup;
 			children = (
-				59C1EE281D41EAB600B9C1B4 /* NBJson.swift */,
 				59C1EE291D41EAB600B9C1B4 /* NBRestClient.swift */,
 				59C1EE2A1D41EAB600B9C1B4 /* UdacityParseClient.swift */,
 			);
@@ -306,7 +303,6 @@
 				59493CD41D415529008BE38A /* OTMapViewController.swift in Sources */,
 				59C1EE2D1D41EAB600B9C1B4 /* UdacityParseClient.swift in Sources */,
 				59493C9F1D414795008BE38A /* AppDelegate.swift in Sources */,
-				59C1EE2B1D41EAB600B9C1B4 /* NBJson.swift in Sources */,
 				59C1EE251D41AC9C00B9C1B4 /* OTMapTabBarController.swift in Sources */,
 				59C1EE211D41AA8900B9C1B4 /* UpdatePinViewController.swift in Sources */,
 			);
