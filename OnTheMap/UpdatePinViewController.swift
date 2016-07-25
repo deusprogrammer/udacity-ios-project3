@@ -133,6 +133,7 @@ class OTMapGeocoderViewController : UIViewController, UITextFieldDelegate {
                         
                         self.presentViewController(alertController, animated: true, completion: nil)
                         self.updatePinButton.enabled = true
+                        self.cancelButton.enabled = true
                     }
                 })
         }
@@ -145,6 +146,8 @@ class UpdatePinViewController : UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var cityStateField: UITextField!
     @IBOutlet weak var updatePinButton: UIButton!
+    @IBOutlet weak var cancelButton: UIButton!
+    
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewWillAppear(animated: Bool) {
@@ -159,8 +162,14 @@ class UpdatePinViewController : UIViewController, UITextFieldDelegate {
         return true
     }
     
+    @IBAction func cancelClicked(sender: AnyObject) {
+        self.cancelButton.enabled = false
+        self.performSegueWithIdentifier("unwindToMap1", sender: self)
+    }
+    
     @IBAction func updateClicked(sender: AnyObject) {
         self.updatePinButton.enabled = false
+        self.cancelButton.enabled = false
         
         self.activityIndicator.startAnimating()
         
@@ -176,6 +185,7 @@ class UpdatePinViewController : UIViewController, UITextFieldDelegate {
                     self.presentViewController(alertController, animated: true, completion: nil)
                     
                     self.updatePinButton.enabled = true
+                    self.cancelButton.enabled = true
                     self.activityIndicator.stopAnimating()
                 }
                 return
@@ -190,6 +200,7 @@ class UpdatePinViewController : UIViewController, UITextFieldDelegate {
                 self.presentViewController(viewController, animated: true, completion: nil)
                 
                 self.updatePinButton.enabled = true
+                self.cancelButton.enabled = true
                 self.activityIndicator.stopAnimating()
             }
         }

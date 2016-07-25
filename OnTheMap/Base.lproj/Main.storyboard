@@ -239,7 +239,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PUf-X9-NgR">
-                                <rect key="frame" x="258" y="443" width="85" height="30"/>
+                                <rect key="frame" x="258" y="410" width="85" height="30"/>
                                 <state key="normal" title="Find on Map"/>
                                 <connections>
                                     <action selector="updateClicked:" destination="aeJ-Ky-jhs" eventType="touchUpInside" id="XDs-cR-edP"/>
@@ -251,6 +251,13 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EEi-pB-RDf">
+                                <rect key="frame" x="276" y="448" width="48" height="30"/>
+                                <state key="normal" title="Cancel"/>
+                                <connections>
+                                    <action selector="cancelClicked:" destination="aeJ-Ky-jhs" eventType="touchUpInside" id="7hS-RJ-8Ep"/>
+                                </connections>
+                            </button>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="c7L-TE-hAJ">
                                 <rect key="frame" x="290" y="486" width="20" height="20"/>
                             </activityIndicatorView>
@@ -259,23 +266,29 @@
                         <constraints>
                             <constraint firstItem="MUH-1i-DZW" firstAttribute="centerX" secondItem="PUf-X9-NgR" secondAttribute="centerX" id="1gz-g9-6i1"/>
                             <constraint firstItem="VkP-Ze-yYy" firstAttribute="leading" secondItem="D5N-UL-owq" secondAttribute="leadingMargin" constant="23" id="8j5-J5-OR0"/>
-                            <constraint firstItem="K9B-cd-6ch" firstAttribute="top" secondItem="PUf-X9-NgR" secondAttribute="bottom" constant="127" id="9F7-eE-tTh"/>
+                            <constraint firstItem="K9B-cd-6ch" firstAttribute="top" secondItem="PUf-X9-NgR" secondAttribute="bottom" constant="160" id="9F7-eE-tTh"/>
+                            <constraint firstItem="EEi-pB-RDf" firstAttribute="centerX" secondItem="D5N-UL-owq" secondAttribute="centerX" id="Bax-j8-cHk"/>
+                            <constraint firstItem="EEi-pB-RDf" firstAttribute="width" secondItem="PUf-X9-NgR" secondAttribute="width" constant="-37" id="CrV-20-udD"/>
                             <constraint firstItem="VkP-Ze-yYy" firstAttribute="centerX" secondItem="MUH-1i-DZW" secondAttribute="centerX" id="Ecv-hZ-ds1"/>
+                            <constraint firstItem="c7L-TE-hAJ" firstAttribute="top" secondItem="EEi-pB-RDf" secondAttribute="bottom" constant="8" id="NhL-cx-bDk"/>
                             <constraint firstItem="VkP-Ze-yYy" firstAttribute="centerX" secondItem="D5N-UL-owq" secondAttribute="centerX" id="OWb-Eg-6vU"/>
                             <constraint firstItem="VkP-Ze-yYy" firstAttribute="top" secondItem="Joa-jw-21t" secondAttribute="bottom" constant="25" id="UGn-pt-T90"/>
                             <constraint firstItem="MUH-1i-DZW" firstAttribute="leading" secondItem="D5N-UL-owq" secondAttribute="leadingMargin" constant="52" id="UUF-ic-PPM"/>
+                            <constraint firstItem="EEi-pB-RDf" firstAttribute="top" secondItem="PUf-X9-NgR" secondAttribute="bottom" constant="8" id="XJe-fm-f8m"/>
                             <constraint firstItem="c7L-TE-hAJ" firstAttribute="centerX" secondItem="D5N-UL-owq" secondAttribute="centerX" id="eXA-Js-lwK"/>
-                            <constraint firstItem="c7L-TE-hAJ" firstAttribute="top" secondItem="PUf-X9-NgR" secondAttribute="bottom" constant="13" id="vex-Ir-Pk0"/>
                             <constraint firstItem="MUH-1i-DZW" firstAttribute="top" secondItem="D5N-UL-owq" secondAttribute="top" constant="265" id="xG7-m6-ilU"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="c7L-TE-hAJ" id="YWt-xD-umv"/>
+                        <outlet property="cancelButton" destination="EEi-pB-RDf" id="stH-ZV-W5L"/>
                         <outlet property="cityStateField" destination="MUH-1i-DZW" id="PVA-v9-2a1"/>
                         <outlet property="updatePinButton" destination="PUf-X9-NgR" id="IvB-BM-IGP"/>
+                        <segue destination="O0K-C1-JsS" kind="unwind" identifier="unwindToMap1" unwindAction="unwindToMap:" id="3GW-R9-XZ4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tga-9i-A8e" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="O0K-C1-JsS" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-688" y="1889"/>
         </scene>
