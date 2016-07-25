@@ -21,6 +21,8 @@ class OTMapGeocoderViewController : UIViewController, UITextFieldDelegate {
     var mapString : String = ""
     
     override func viewWillAppear(animated: Bool) {
+        self.mediaUrlField.delegate = self
+        
         // Set media url field to field we downloaded already if the user existed already
         if (StudentLocationModel.myStudentLocation != nil) {
             self.mediaUrlField.text = StudentLocationModel.myStudentLocation.mediaUrl
@@ -45,9 +47,16 @@ class OTMapGeocoderViewController : UIViewController, UITextFieldDelegate {
         self.mapView.setCenterCoordinate(coordinate, animated: true)
     }
     
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        // When the text field should return, resign the first responder
+        textField.resignFirstResponder()
+        return true;
+    }
+    
     @IBAction func cancelClicked(sender: AnyObject) {
         dispatch_async(dispatch_get_main_queue()) {
-            self.dismissViewControllerAnimated(false, completion: nil)
+            //self.presentingViewController?.dismissViewControllerAnimated(false, completion: nil)
+            self.performSegueWithIdentifier("unwindToMap", sender: self)
         }
     }
     
@@ -71,8 +80,7 @@ class OTMapGeocoderViewController : UIViewController, UITextFieldDelegate {
                 myStudentLocation,
                 onComplete: {(location: StudentLocation!) -> Void in
                     dispatch_async(dispatch_get_main_queue()) {
-                        let viewController = self.storyboard?.instantiateViewControllerWithIdentifier("OTMapNavigator") as! UINavigationController
-                        self.presentViewController(viewController, animated: true, completion: nil)
+                        self.performSegueWithIdentifier("unwindToMap", sender: self)
                     }
                 },
                 onError:  {(statusCode: Int, payload: Any!) -> Void in
@@ -132,7 +140,7 @@ class OTMapGeocoderViewController : UIViewController, UITextFieldDelegate {
     }
 }
 
-class UpdatePinViewController : UIViewController {
+class UpdatePinViewController : UIViewController, UITextFieldDelegate {
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
     @IBOutlet weak var cityStateField: UITextField!
@@ -140,22 +148,15 @@ class UpdatePinViewController : UIViewController {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewWillAppear(animated: Bool) {
+        self.cityStateField.delegate = self
         if (StudentLocationModel.myStudentLocation != nil) {
             self.cityStateField.text = StudentLocationModel.myStudentLocation.mapString
         }
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        // When the text field should return, resign the first responder
         textField.resignFirstResponder()
-        return true;
-    }
-    
-    func getKeyboardHeight(notification: NSNotification) -> CGFloat {
-        // Get keyboard height
-        let userInfo = notification.userInfo!
-        let keyboardSize = userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue // of CGRect
-        return keyboardSize.CGRectValue().height
+        return true
     }
     
     @IBAction func updateClicked(sender: AnyObject) {

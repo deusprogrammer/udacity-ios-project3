@@ -36,16 +36,19 @@ class OTMapTabBarController : UITabBarController {
             })
     }
     
+    @IBAction func unwindToMap(segue: UIStoryboardSegue) {
+        
+    }
+    
     @IBAction func addPinClicked(sender: AnyObject) {
-        // Get the create meme view controller from story board
-        let object:AnyObject = (self.storyboard?.instantiateViewControllerWithIdentifier("UpdatePinViewController"))!
-        let viewController : UpdatePinViewController = object as! UpdatePinViewController
-        
-        // Setup view controller before opening
-        viewController.hidesBottomBarWhenPushed = true
-        
-        // Push the view controller onto the navgation stack
-        self.navigationController?.pushViewController(viewController, animated: true)
+//        // Get the create meme view controller from story board
+//        let object:AnyObject = (self.storyboard?.instantiateViewControllerWithIdentifier("UpdatePinViewController"))!
+//        let viewController : UpdatePinViewController = object as! UpdatePinViewController
+//        
+//        // Setup view controller before opening
+//        viewController.hidesBottomBarWhenPushed = true
+//        
+//        self.showViewController(viewController, sender: self)
     }
     
     func refreshLocations() -> Void {

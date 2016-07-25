@@ -213,9 +213,11 @@
                         <outlet property="mapView" destination="8xw-dj-qw4" id="b0T-pg-dh0"/>
                         <outlet property="mediaUrlField" destination="uaf-Oj-yN3" id="dHR-Fk-oso"/>
                         <outlet property="updatePinButton" destination="Nq3-nM-ap1" id="pkP-yU-8bX"/>
+                        <segue destination="Ro6-b5-aY1" kind="unwind" identifier="unwindToMap" unwindAction="unwindToMap:" id="fJV-xt-8gS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SJe-oO-ep2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Ro6-b5-aY1" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-17" y="1889"/>
         </scene>
@@ -290,6 +292,7 @@
                         <barButtonItem key="rightBarButtonItem" image="pin" id="RKH-KU-hda">
                             <connections>
                                 <action selector="addPinClicked:" destination="a7N-Tp-qpa" id="oAY-2q-QCx"/>
+                                <segue destination="aeJ-Ky-jhs" kind="presentation" id="lW3-5k-Om6"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
