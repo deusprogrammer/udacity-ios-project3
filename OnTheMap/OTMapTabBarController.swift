@@ -86,7 +86,16 @@ class OTMapTabBarController : UITabBarController {
                 )
             },
             onError: {(statusCode: Int, payload: Any) -> Void in
-                print(payload)
+                var errorObject = payload as! Dictionary<String, AnyObject>
+                let error = errorObject["error"] as! String
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    let alertController = UIAlertController(title: "Network Failure", message: error, preferredStyle: .Alert)
+                    let OKAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                    alertController.addAction(OKAction)
+                    
+                    self.presentViewController(alertController, animated: true, completion: nil)
+                }
             })
     }
 }

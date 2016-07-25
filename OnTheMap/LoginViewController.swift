@@ -54,6 +54,20 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         }
                     },
                     onError: {(statusCode: Int, payload: Any) -> Void in
+                        var errorObject = payload as! Dictionary<String, AnyObject>
+                        let error = errorObject["error"] as! String
+                        
+                        dispatch_async(dispatch_get_main_queue()) {
+                            let alertController = UIAlertController(title: "Login Failure", message: error, preferredStyle: .Alert)
+                            let OKAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                            alertController.addAction(OKAction)
+                            
+                            self.presentViewController(alertController, animated: true) {
+                                self.loginButton.enabled = true
+                                self.emailAddressField.text = ""
+                                self.passwordField.text = ""
+                            }
+                        }
                     }
                 )
             },
