@@ -12,11 +12,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var emailAddressField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
-    
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-    
-    var screenShifted = false
-    var amountShifted : CGFloat = 0
 
     override func viewWillAppear(animated: Bool) {
         emailAddressField.delegate = self
@@ -40,16 +35,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             onComplete: {(payload: Any) -> Void in
                 
                 // Pull out the unique key
-                self.appDelegate.uniqueKey = JSONHelper.search("/account/key", object: payload) as! String
+                StudentLocationModel.uniqueKey = JSONHelper.search("/account/key", object: payload) as! String
                 
                 udacityClient.getUserData(
-                    self.appDelegate.uniqueKey,
+                    StudentLocationModel.uniqueKey,
                     onComplete: {(payload: Any) -> Void in
                         
                         var userData = JSONHelper.search("/user", object: payload) as! Dictionary<String, AnyObject>
                         
-                        self.appDelegate.myStudentData["firstName"] = userData["first_name"] as? String
-                        self.appDelegate.myStudentData["lastName"] = userData["last_name"] as? String
+                        StudentLocationModel.myStudentData["firstName"] = userData["first_name"] as? String
+                        StudentLocationModel.myStudentData["lastName"] = userData["last_name"] as? String
                         
                         dispatch_async(dispatch_get_main_queue()) {
                             let viewController = self.storyboard?.instantiateViewControllerWithIdentifier("OTMapNavigator") as! UINavigationController

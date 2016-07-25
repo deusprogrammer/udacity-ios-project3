@@ -8,9 +8,7 @@
 
 import UIKit
 
-class OTMapTabBarController : UITabBarController {
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-    
+class OTMapTabBarController : UITabBarController {    
     override func viewWillAppear(animated: Bool) {
         refreshLocations()
     }
@@ -53,25 +51,27 @@ class OTMapTabBarController : UITabBarController {
     func refreshLocations() -> Void {
         // Notify on completion
         NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "trinary.locationsRefreshed", object: nil))
-        self.appDelegate.studentLocations = Array<StudentLocation>()
+        StudentLocationModel.studentLocations = Array<StudentLocation>()
         
         let parseClient = UdacityParseClient(
             appId: "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr",
             apiKey: "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY")
         
         parseClient.getStudentLocationById(
-            self.appDelegate.uniqueKey,
+            StudentLocationModel.uniqueKey,
             onComplete: {(location: StudentLocation!) -> Void in
-                self.appDelegate.myStudentLocation = location
+                StudentLocationModel.myStudentLocation = location
                 
-                parseClient.getAllStudentLocations(
+                parseClient.getStudentLocations(
+                    page: 0,
+                    pageSize: 100,
                     onComplete: {(locations: Array<StudentLocation>!) -> Void in
-                        self.appDelegate.studentLocations = locations
+                        StudentLocationModel.studentLocations = locations
                         
                         // Notify on completion
                         NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "trinary.locationsUpdated", object: nil))
                     },
-                    onError: {(statusCode: Int, page: Int, pageSize: Int, payload: Any) -> Void in
+                    onError: {(statusCode: Int, payload: Any) -> Void in
                         var errorObject = payload as! Dictionary<String, AnyObject>
                         let error = errorObject["error"] as! String
                         

@@ -12,8 +12,6 @@ import MapKit
 class OTMapViewController : UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -73,7 +71,7 @@ class OTMapViewController : UIViewController, MKMapViewDelegate {
         // point annotations will be stored in this array, and then provided to the map view.
         var annotations = [MKPointAnnotation]()
         
-        for location in self.appDelegate.studentLocations {
+        for location in StudentLocationModel.studentLocations {
             let lat = CLLocationDegrees(location.latitude)
             let long = CLLocationDegrees(location.longtitude)
             

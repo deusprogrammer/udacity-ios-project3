@@ -12,12 +12,6 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    
-    var uniqueKey: String! = nil
-    var studentLocations = Array<StudentLocation>()
-    var myStudentLocation : StudentLocation! = nil
-    var myStudentData : Dictionary<String, String!>! = [:]
-
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.

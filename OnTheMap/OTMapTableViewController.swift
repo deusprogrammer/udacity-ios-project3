@@ -9,20 +9,18 @@
 import UIKit
 
 class OTMapTableViewController: UITableViewController {
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-    
     override func viewWillAppear(animated: Bool) {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(OTMapTableViewController.updateContents), name: "trinary.locationsUpdated", object: nil)
         self.tableView.reloadData()
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.appDelegate.studentLocations.count
+        return StudentLocationModel.studentLocations.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("TableViewCell")!
-        let location = self.appDelegate.studentLocations[indexPath.row]
+        let location = StudentLocationModel.studentLocations[indexPath.row]
         
         cell.textLabel?.text = "\(location.lastName), \(location.firstName)"
         
@@ -30,7 +28,7 @@ class OTMapTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let location = self.appDelegate.studentLocations[indexPath.row]
+        let location = StudentLocationModel.studentLocations[indexPath.row]
         
         if let url: NSURL = NSURL(string: location.mediaUrl) {
             UIApplication.sharedApplication().openURL(url)

@@ -8,68 +8,8 @@
 
 import Foundation
 
-class JSONHelper {
-    class func serialize(obj: AnyObject) -> String! {
-        do {
-            let jsonData = try NSJSONSerialization.dataWithJSONObject(obj, options: .PrettyPrinted)
-            return NSString(data: jsonData, encoding: NSUTF8StringEncoding) as String!
-        } catch {
-            return nil
-        }
-    }
-    
-    class func search(path: String, object: Any) -> Any! {
-        let pathComponents : Array<String> = path.componentsSeparatedByString("/")
-        var currentNode : Any = object
-        
-        for pathComponent in pathComponents {
-            if (pathComponent.isEmpty) {
-                continue
-            }
-            
-            let indexStart = pathComponent.characters.indexOf("[")
-            let indexEnd   = pathComponent.characters.indexOf("]")
-            
-            if (indexStart != nil && indexEnd != nil) {
-                let pathComponentName = pathComponent.substringToIndex(indexStart!)
-                let pathComponentIndex = pathComponent.substringWithRange((indexStart!.advancedBy(1)..<indexEnd!))
-                
-                if (!pathComponentName.isEmpty) {
-                    // Go to dictionary entry
-                    if (!(currentNode is Dictionary<String, AnyObject>)) {
-                        return nil
-                    }
-                    
-                    
-                    let d = currentNode as! Dictionary<String, AnyObject>
-                    currentNode = d[pathComponentName]
-                }
-                
-                
-                // Go to array element
-                if (!(currentNode is Array<Any>)) {
-                    return nil
-                }
-                
-                let a = currentNode as! Array<Any>
-                currentNode = a[(pathComponentIndex as NSString).integerValue]
-            } else {
-                // Go to dictionary entry
-                if (!(currentNode is Dictionary<String, AnyObject>)) {
-                    return nil
-                }
-                
-                let d = currentNode as! Dictionary<String, AnyObject>
-                currentNode = d[pathComponent]
-            }
-        }
-        
-        return currentNode
-    }
-}
-
 // A class for containing student locations
-class StudentLocation {
+struct StudentLocation {
     var uniqueKey : String!
     var objectId  : String!
     var firstName : String!
@@ -80,23 +20,11 @@ class StudentLocation {
     var latitude : Double!
     var updatedAt : String!
     
-    // Serialize this object into a Dictionary
-    func serialize() -> Dictionary<String, AnyObject> {
-        return [
-            "uniqueKey" : self.uniqueKey,
-            "firstName" : self.firstName,
-            "lastName"  : self.lastName,
-            "mediaURL"  : self.mediaUrl,
-            "mapString" : self.mapString,
-            "latitude"  : self.latitude,
-            "longitude" : self.longtitude,
-            "updatedAt" : self.updatedAt
-        ]
-    }
-    
-    // Deserialize supplied map into this object
-    func deserialize(map: Dictionary<String, AnyObject>) {
-        self.objectId   = map["objectId"]  as! String
+    init(map: Dictionary<String, AnyObject!>) {
+        if (map["objectId"] != nil) {
+            self.objectId   = map["objectId"]  as! String
+        }
+        
         self.uniqueKey  = map["uniqueKey"] as! String
         self.firstName  = map["firstName"] as! String
         self.lastName   = map["lastName"]  as! String
@@ -104,8 +32,31 @@ class StudentLocation {
         self.mapString  = map["mapString"] as! String
         self.latitude   = map["latitude"]  as! Double
         self.longtitude = map["longitude"] as! Double
-        self.updatedAt  = map["updatedAt"] as! String
+        
+        if (map["updatedAt"] != nil) {
+            self.updatedAt  = map["updatedAt"] as! String
+        }
     }
+    
+    // Serialize this object into a Dictionary
+    func serialize() -> Dictionary<String, AnyObject!> {
+        return [
+            "uniqueKey" : self.uniqueKey,
+            "firstName" : self.firstName,
+            "lastName"  : self.lastName,
+            "mediaURL"  : self.mediaUrl,
+            "mapString" : self.mapString,
+            "latitude"  : self.latitude,
+            "longitude" : self.longtitude
+        ]
+    }
+}
+
+class StudentLocationModel {
+    static var studentLocations : Array<StudentLocation> = []
+    static var uniqueKey: String! = nil
+    static var myStudentLocation : StudentLocation! = nil
+    static var myStudentData : Dictionary<String, String!>! = [:]
 }
 
 class UdacityClient {
@@ -125,12 +76,14 @@ class UdacityClient {
             // If error is set, display it and fail
             if (response.error != nil) {
                 print(response.error?.localizedDescription)
+                let errorMap = [
+                    "error": (response.error?.localizedDescription)!
+                    ] as Dictionary<String, AnyObject>
+                
                 if (onError != nil) {
                     onError(
                         statusCode: 0,
-                        payload: [
-                            "errorMessage": response.error?.localizedDescription
-                        ]
+                        payload: errorMap
                     )
                 }
                 return
@@ -141,12 +94,14 @@ class UdacityClient {
             do {
                 try data = NSJSONSerialization.JSONObjectWithData(response.body.subdataWithRange(NSRange(location: 4, length: response.body.length - 4)), options: .AllowFragments)
             } catch {
+                let errorMap = [
+                    "error": (response.error?.localizedDescription)!
+                    ] as Dictionary<String, AnyObject>
+                
                 if (onError != nil) {
                     onError(
                         statusCode: 0,
-                        payload: [
-                            "errorMessage": response.error?.localizedDescription
-                        ]
+                        payload: errorMap
                     )
                 }
                 return
@@ -198,12 +153,14 @@ class UdacityClient {
             // If error is set, display it and fail
             if (response.error != nil) {
                 print(response.error?.localizedDescription)
+                let errorMap = [
+                    "error": (response.error?.localizedDescription)!
+                    ] as Dictionary<String, AnyObject>
+                
                 if (onError != nil) {
                     onError(
                         statusCode: 0,
-                        payload: [
-                            "errorMessage": response.error?.localizedDescription
-                        ]
+                        payload: errorMap
                     )
                 }
                 return
@@ -214,12 +171,14 @@ class UdacityClient {
             do {
                 try data = NSJSONSerialization.JSONObjectWithData(response.body.subdataWithRange(NSRange(location: 4, length: response.body.length - 4)), options: .AllowFragments)
             } catch {
+                let errorMap = [
+                    "error": (response.error?.localizedDescription)!
+                    ] as Dictionary<String, AnyObject>
+                
                 if (onError != nil) {
                     onError(
                         statusCode: 0,
-                        payload: [
-                            "errorMessage": response.error?.localizedDescription
-                        ]
+                        payload: errorMap
                     )
                 }
                 return
@@ -272,12 +231,14 @@ class UdacityClient {
             // If error is set, display it and fail
             if (response.error != nil) {
                 print(response.error?.localizedDescription)
+                let errorMap = [
+                    "error": (response.error?.localizedDescription)!
+                ] as Dictionary<String, AnyObject>
+                
                 if (onError != nil) {
                     onError(
                         statusCode: 0,
-                        payload: [
-                            "errorMessage": response.error?.localizedDescription
-                        ]
+                        payload: errorMap
                     )
                 }
                 return
@@ -288,12 +249,14 @@ class UdacityClient {
             do {
                 try data = NSJSONSerialization.JSONObjectWithData(response.body.subdataWithRange(NSRange(location: 4, length: response.body.length - 4)), options: .AllowFragments)
             } catch {
+                let errorMap = [
+                    "error": (response.error?.localizedDescription)!
+                    ] as Dictionary<String, AnyObject>
+                
                 if (onError != nil) {
                     onError(
                         statusCode: 0,
-                        payload: [
-                            "errorMessage": response.error?.localizedDescription
-                        ]
+                        payload: errorMap
                     )
                 }
                 return
@@ -378,12 +341,14 @@ class UdacityParseClient {
             // If error is set, display it and fail
             if (response.error != nil) {
                 print(response.error?.localizedDescription)
+                let errorMap = [
+                    "error": (response.error?.localizedDescription)!
+                    ] as Dictionary<String, AnyObject>
+                
                 if (onError != nil) {
                     onError(
                         statusCode: 0,
-                        payload: [
-                            "errorMessage": response.error?.localizedDescription
-                        ]
+                        payload: errorMap
                     )
                 }
                 return
@@ -394,12 +359,14 @@ class UdacityParseClient {
             do {
                 try data = NSJSONSerialization.JSONObjectWithData(response.body, options: .AllowFragments)
             } catch {
+                let errorMap = [
+                    "error": (response.error?.localizedDescription)!
+                    ] as Dictionary<String, AnyObject>
+                
                 if (onError != nil) {
                     onError(
                         statusCode: 0,
-                        payload: [
-                            "errorMessage": response.error?.localizedDescription
-                        ]
+                        payload: errorMap
                     )
                 }
                 return
@@ -452,12 +419,14 @@ class UdacityParseClient {
             // If error is set, display it and fail
             if (response.error != nil) {
                 print(response.error?.localizedDescription)
+                let errorMap = [
+                    "error": (response.error?.localizedDescription)!
+                    ] as Dictionary<String, AnyObject>
+                
                 if (onError != nil) {
                     onError(
                         statusCode: 0,
-                        payload: [
-                            "errorMessage": response.error?.localizedDescription
-                        ]
+                        payload: errorMap
                     )
                 }
                 return
@@ -468,12 +437,14 @@ class UdacityParseClient {
             do {
                 try data = NSJSONSerialization.JSONObjectWithData(response.body, options: .AllowFragments)
             } catch {
+                let errorMap = [
+                    "error": (response.error?.localizedDescription)!
+                    ] as Dictionary<String, AnyObject>
+                
                 if (onError != nil) {
                     onError(
                         statusCode: 0,
-                        payload: [
-                            "errorMessage": response.error?.localizedDescription
-                        ]
+                        payload: errorMap
                     )
                 }
                 return
@@ -493,13 +464,15 @@ class UdacityParseClient {
                 return
             }
             
+            var newLocation = StudentLocation(map: location.serialize())
+            
             // Parse result and update location object with object id
             var result = data as! Dictionary<String, AnyObject>
-            location.objectId = result["objectId"] as! String
+            newLocation.objectId = result["objectId"] as! String
             
             // Run call back if one was provided
             if (onComplete != nil) {
-                onComplete(location: location)
+                onComplete(location: newLocation)
             }
         })
     }
@@ -537,12 +510,14 @@ class UdacityParseClient {
             // If error is set, display it and fail
             if (response.error != nil) {
                 print(response.error?.localizedDescription)
+                let errorMap = [
+                    "error": (response.error?.localizedDescription)!
+                ] as Dictionary<String, AnyObject>
+                
                 if (onError != nil) {
                     onError(
                         statusCode: 0,
-                        payload: [
-                            "errorMessage": response.error?.localizedDescription
-                        ]
+                        payload: errorMap
                     )
                 }
                 return
@@ -557,7 +532,7 @@ class UdacityParseClient {
                     onError(
                         statusCode: 0,
                         payload: [
-                            "errorMessage": response.error?.localizedDescription
+                            "error": response.error?.localizedDescription
                         ]
                     )
                 }
@@ -590,8 +565,7 @@ class UdacityParseClient {
                 return
             }
             
-            let location = StudentLocation()
-            location.deserialize(results[0] as! Dictionary<String, AnyObject>)
+            let location = StudentLocation(map: results[0] as! Dictionary<String, AnyObject>)
             
             // Run call back if one was provided
             if (onComplete != nil) {
@@ -602,13 +576,11 @@ class UdacityParseClient {
     }
     
     // Get all student locations one page at a time (calling eachPage with each page)
-    func getAllStudentLocations(
-        page: Int = 0,
+    func getStudentLocations(
+        page page: Int = 0,
         pageSize: Int = 100,
-        previousLocations: Array<StudentLocation>! = Array<StudentLocation>(),
-        eachPage : ((location : Array<StudentLocation>!) -> Void)! = nil,
         onComplete : ((locations: Array<StudentLocation>!) -> Void)! = nil,
-        onError: ((statusCode: Int, page: Int, pageSize: Int, payload: Any) -> Void)! = nil) -> Void {
+        onError: ((statusCode: Int, payload: Any) -> Void)! = nil) -> Void {
         
         let skip = page * pageSize
         let limit = pageSize
@@ -618,7 +590,8 @@ class UdacityParseClient {
             uri: "/1/classes/StudentLocation",
             query: [
                 "limit": limit,
-                "skip": skip
+                "skip": skip,
+                "order": "-updatedAt"
             ],
             headers: [
                 "X-Parse-Application-Id": self.appId,
@@ -632,14 +605,14 @@ class UdacityParseClient {
             // If error is set, display it and fail
             if (response.error != nil) {
                 print(response.error?.localizedDescription)
+                let errorMap = [
+                    "error": (response.error?.localizedDescription)!
+                    ] as Dictionary<String, AnyObject>
+                
                 if (onError != nil) {
                     onError(
                         statusCode: 0,
-                        page: page,
-                        pageSize: pageSize,
-                        payload: [
-                            "errorMessage": response.error?.localizedDescription
-                        ]
+                        payload: errorMap
                     )
                 }
                 return
@@ -650,14 +623,14 @@ class UdacityParseClient {
             do {
                 try data = NSJSONSerialization.JSONObjectWithData(response.body, options: .AllowFragments)
             } catch {
+                let errorMap = [
+                    "error": (response.error?.localizedDescription)!
+                    ] as Dictionary<String, AnyObject>
+                
                 if (onError != nil) {
                     onError(
                         statusCode: 0,
-                        page: page,
-                        pageSize: pageSize,
-                        payload: [
-                            "errorMessage": response.error?.localizedDescription
-                        ]
+                        payload: errorMap
                     )
                 }
                 return
@@ -671,8 +644,6 @@ class UdacityParseClient {
                 if (onError != nil) {
                     onError(
                         statusCode: response.statusCode,
-                        page: page,
-                        pageSize: pageSize,
                         payload: data
                     )
                 }
@@ -682,14 +653,6 @@ class UdacityParseClient {
             // Acquire the results from the results key at the root of the returned object
             let results = JSONHelper.search("/results", object: data) as! Array<AnyObject>
             
-            // If there are no results, then quit
-            if (results.count <= 0) {
-                if (onComplete != nil) {
-                    onComplete(locations: previousLocations)
-                }
-                return
-            }
-            
             // Deserialize the payload into an array of StudentLocations
             var locations : Array<StudentLocation> = []
             for anyResult in results {
@@ -698,25 +661,14 @@ class UdacityParseClient {
                     continue
                 }
                 
-                let studentLocation = StudentLocation()
-                studentLocation.deserialize(result)
-                
-                locations.append(studentLocation)
+                locations.append(StudentLocation(map: result))
             }
-            
-            var updatedLocations = Array<StudentLocation>()
-            
-            updatedLocations.appendContentsOf(previousLocations)
-            updatedLocations.appendContentsOf(locations)
             
             // Run call back if one was provided
-            if eachPage != nil {
-                eachPage(location: locations)
+            if onComplete != nil {
+                onComplete(locations: locations)
             }
-            
-            // Recurse to the next page
-            let nextPage = page + 1
-            self.getAllStudentLocations(nextPage, previousLocations: updatedLocations, pageSize: pageSize, eachPage: eachPage, onComplete: onComplete, onError: onError)
         })
     }
+
 }

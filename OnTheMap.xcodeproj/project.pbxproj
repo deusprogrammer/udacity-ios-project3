@@ -21,6 +21,7 @@
 		59C1EE271D41BAF600B9C1B4 /* OTMapTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C1EE261D41BAF600B9C1B4 /* OTMapTableViewController.swift */; };
 		59C1EE2C1D41EAB600B9C1B4 /* NBRestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C1EE291D41EAB600B9C1B4 /* NBRestClient.swift */; };
 		59C1EE2D1D41EAB600B9C1B4 /* UdacityParseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C1EE2A1D41EAB600B9C1B4 /* UdacityParseClient.swift */; };
+		59E7F70B1D45C3A200C1DE0A /* JSONHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E7F70A1D45C3A200C1DE0A /* JSONHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		59C1EE261D41BAF600B9C1B4 /* OTMapTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMapTableViewController.swift; sourceTree = "<group>"; };
 		59C1EE291D41EAB600B9C1B4 /* NBRestClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NBRestClient.swift; sourceTree = "<group>"; };
 		59C1EE2A1D41EAB600B9C1B4 /* UdacityParseClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityParseClient.swift; sourceTree = "<group>"; };
+		59E7F70A1D45C3A200C1DE0A /* JSONHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,7 @@
 			children = (
 				59C1EE291D41EAB600B9C1B4 /* NBRestClient.swift */,
 				59C1EE2A1D41EAB600B9C1B4 /* UdacityParseClient.swift */,
+				59E7F70A1D45C3A200C1DE0A /* JSONHelper.swift */,
 			);
 			name = "REST Client";
 			sourceTree = "<group>";
@@ -300,6 +303,7 @@
 				59C1EE271D41BAF600B9C1B4 /* OTMapTableViewController.swift in Sources */,
 				59493CA11D414795008BE38A /* LoginViewController.swift in Sources */,
 				59C1EE2C1D41EAB600B9C1B4 /* NBRestClient.swift in Sources */,
+				59E7F70B1D45C3A200C1DE0A /* JSONHelper.swift in Sources */,
 				59493CD41D415529008BE38A /* OTMapViewController.swift in Sources */,
 				59C1EE2D1D41EAB600B9C1B4 /* UdacityParseClient.swift in Sources */,
 				59493C9F1D414795008BE38A /* AppDelegate.swift in Sources */,

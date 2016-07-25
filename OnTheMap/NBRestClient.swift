@@ -16,6 +16,10 @@ class NBRestResponse {
     var body : NSData!
     var error : NSError?
     
+    init(error: NSError?) {
+        self.error = error
+    }
+    
     init(statusCode: Int, contentType: String, headers: Dictionary<String, String>, body: NSData) {
         self.statusCode = statusCode
         self.contentType = contentType
@@ -154,9 +158,12 @@ class NBRestRequest {
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler: { (data: NSData?, response:NSURLResponse?, error: NSError?) -> Void in
             if (error != nil || data == nil) {
                 print("ERROR: \(error?.description)")
-                self.response = nil
+                self.response = NBRestResponse(error: error)
                 self.completed = true
                 self.error = error
+                
+                completionHandler(response: self.response)
+                
                 return
             }
             

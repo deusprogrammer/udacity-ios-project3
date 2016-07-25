@@ -11,8 +11,6 @@ import MapKit
 import CoreLocation
 
 class OTMapGeocoderViewController : UIViewController, UITextFieldDelegate {
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-    
     @IBOutlet weak var mediaUrlField: UITextField!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var updatePinButton: UIButton!
@@ -24,8 +22,8 @@ class OTMapGeocoderViewController : UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(animated: Bool) {
         // Set media url field to field we downloaded already if the user existed already
-        if (self.appDelegate.myStudentLocation != nil) {
-            self.mediaUrlField.text = self.appDelegate.myStudentLocation.mediaUrl
+        if (StudentLocationModel.myStudentLocation != nil) {
+            self.mediaUrlField.text = StudentLocationModel.myStudentLocation.mediaUrl
         }
         
         // We will create an MKPointAnnotation for each dictionary in "locations". The
@@ -49,8 +47,7 @@ class OTMapGeocoderViewController : UIViewController, UITextFieldDelegate {
     
     @IBAction func cancelClicked(sender: AnyObject) {
         dispatch_async(dispatch_get_main_queue()) {
-            let viewController = self.storyboard?.instantiateViewControllerWithIdentifier("OTMapNavigator") as! UINavigationController
-            self.presentViewController(viewController, animated: true, completion: nil)
+            self.dismissViewControllerAnimated(false, completion: nil)
         }
     }
     
@@ -61,7 +58,7 @@ class OTMapGeocoderViewController : UIViewController, UITextFieldDelegate {
             appId: "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr",
             apiKey: "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY")
 
-        var myStudentLocation = self.appDelegate.myStudentLocation
+        var myStudentLocation = StudentLocationModel.myStudentLocation
 
         if (myStudentLocation != nil) {
             let mediaUrl = self.mediaUrlField.text
@@ -71,7 +68,7 @@ class OTMapGeocoderViewController : UIViewController, UITextFieldDelegate {
             myStudentLocation.longtitude = self.longitude
 
             parseClient.updateStudentLocation(
-                self.appDelegate.myStudentLocation,
+                myStudentLocation,
                 onComplete: {(location: StudentLocation!) -> Void in
                     dispatch_async(dispatch_get_main_queue()) {
                         let viewController = self.storyboard?.instantiateViewControllerWithIdentifier("OTMapNavigator") as! UINavigationController
@@ -89,28 +86,29 @@ class OTMapGeocoderViewController : UIViewController, UITextFieldDelegate {
 
                         self.presentViewController(alertController, animated: true, completion: nil)
                         
-                        self.updatePinButton.enabled = false
+                        self.updatePinButton.enabled = true
                     }
                 }
             )
         } else {
-            var userData = self.appDelegate.myStudentData
-            let uniqueKey = self.appDelegate.uniqueKey
+            var userData = StudentLocationModel.myStudentData
+            let uniqueKey = StudentLocationModel.uniqueKey
             let mediaUrl = self.mediaUrlField.text
             let mapString = self.mapString
-            myStudentLocation = StudentLocation()
-            myStudentLocation.firstName = userData["firstName"]
-            myStudentLocation.lastName = userData["lastName"]
-            myStudentLocation.uniqueKey = uniqueKey
-            myStudentLocation.mediaUrl = mediaUrl
-            myStudentLocation.mapString = mapString
-            myStudentLocation.latitude = self.latitude
-            myStudentLocation.longtitude = self.longitude
+            myStudentLocation = StudentLocation(map: [
+                "firstName" : userData["firstName"]!,
+                "lastName" : userData["lastName"]!,
+                "uniqueKey" : uniqueKey,
+                "mediaURL" : mediaUrl!,
+                "mapString" : mapString,
+                "latitude" : latitude,
+                "longitude" : longitude
+            ])
 
             parseClient.createStudentLocation(
                 myStudentLocation,
                 onComplete: {(location: StudentLocation!) -> Void in
-                    self.appDelegate.myStudentLocation = location
+                    StudentLocationModel.myStudentLocation = location
                     dispatch_async(dispatch_get_main_queue()) {
                         let viewController = self.storyboard?.instantiateViewControllerWithIdentifier("OTMapNavigator") as! UINavigationController
                         self.presentViewController(viewController, animated: true, completion: nil)
@@ -126,7 +124,7 @@ class OTMapGeocoderViewController : UIViewController, UITextFieldDelegate {
                         alertController.addAction(OKAction)
                         
                         self.presentViewController(alertController, animated: true, completion: nil)
-                        self.updatePinButton.enabled = false
+                        self.updatePinButton.enabled = true
                     }
                 })
         }
@@ -139,13 +137,11 @@ class UpdatePinViewController : UIViewController {
     
     @IBOutlet weak var cityStateField: UITextField!
     @IBOutlet weak var updatePinButton: UIButton!
-    
-    var screenShifted = false
-    var amountShifted : CGFloat = 0
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewWillAppear(animated: Bool) {
-        if (self.appDelegate.myStudentLocation != nil) {
-            self.cityStateField.text = self.appDelegate.myStudentLocation.mapString
+        if (StudentLocationModel.myStudentLocation != nil) {
+            self.cityStateField.text = StudentLocationModel.myStudentLocation.mapString
         }
     }
     
@@ -165,11 +161,11 @@ class UpdatePinViewController : UIViewController {
     @IBAction func updateClicked(sender: AnyObject) {
         self.updatePinButton.enabled = false
         
+        self.activityIndicator.startAnimating()
+        
         let addressString = cityStateField.text
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(addressString!) {(placemarks: [CLPlacemark]?, error: NSError?) -> Void in
-            print("\(placemarks![0].location?.coordinate.latitude), \(placemarks![0].location?.coordinate.longitude)")
-            
             if (error != nil) {
                 dispatch_async(dispatch_get_main_queue()) {
                     let alertController = UIAlertController(title: "Geocoder Failure", message: error?.localizedDescription, preferredStyle: .Alert)
@@ -177,6 +173,9 @@ class UpdatePinViewController : UIViewController {
                     alertController.addAction(OKAction)
 
                     self.presentViewController(alertController, animated: true, completion: nil)
+                    
+                    self.updatePinButton.enabled = true
+                    self.activityIndicator.stopAnimating()
                 }
                 return
             }
@@ -186,7 +185,11 @@ class UpdatePinViewController : UIViewController {
                 viewController.latitude = (placemarks![0].location?.coordinate.latitude)!
                 viewController.longitude = (placemarks![0].location?.coordinate.longitude)!
                 viewController.mapString = self.cityStateField.text!
+                
                 self.presentViewController(viewController, animated: true, completion: nil)
+                
+                self.updatePinButton.enabled = true
+                self.activityIndicator.stopAnimating()
             }
         }
     }

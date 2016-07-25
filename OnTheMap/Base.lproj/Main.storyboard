@@ -249,6 +249,9 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="c7L-TE-hAJ">
+                                <rect key="frame" x="290" y="486" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -259,10 +262,13 @@
                             <constraint firstItem="VkP-Ze-yYy" firstAttribute="centerX" secondItem="D5N-UL-owq" secondAttribute="centerX" id="OWb-Eg-6vU"/>
                             <constraint firstItem="VkP-Ze-yYy" firstAttribute="top" secondItem="Joa-jw-21t" secondAttribute="bottom" constant="25" id="UGn-pt-T90"/>
                             <constraint firstItem="MUH-1i-DZW" firstAttribute="leading" secondItem="D5N-UL-owq" secondAttribute="leadingMargin" constant="52" id="UUF-ic-PPM"/>
+                            <constraint firstItem="c7L-TE-hAJ" firstAttribute="centerX" secondItem="D5N-UL-owq" secondAttribute="centerX" id="eXA-Js-lwK"/>
+                            <constraint firstItem="c7L-TE-hAJ" firstAttribute="top" secondItem="PUf-X9-NgR" secondAttribute="bottom" constant="13" id="vex-Ir-Pk0"/>
                             <constraint firstItem="MUH-1i-DZW" firstAttribute="top" secondItem="D5N-UL-owq" secondAttribute="top" constant="265" id="xG7-m6-ilU"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="c7L-TE-hAJ" id="YWt-xD-umv"/>
                         <outlet property="cityStateField" destination="MUH-1i-DZW" id="PVA-v9-2a1"/>
                         <outlet property="updatePinButton" destination="PUf-X9-NgR" id="IvB-BM-IGP"/>
                     </connections>
@@ -276,14 +282,14 @@
             <objects>
                 <tabBarController id="a7N-Tp-qpa" customClass="OTMapTabBarController" customModule="OnTheMap" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="dAX-Ih-e5m">
-                        <barButtonItem key="leftBarButtonItem" image="pin" id="RKH-KU-hda">
-                            <connections>
-                                <action selector="addPinClicked:" destination="a7N-Tp-qpa" id="oAY-2q-QCx"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Logout" id="Crd-aK-Y19" userLabel="Bar Button Item">
+                        <barButtonItem key="leftBarButtonItem" title="Logout" id="Crd-aK-Y19" userLabel="Bar Button Item">
                             <connections>
                                 <action selector="logoutClicked:" destination="a7N-Tp-qpa" id="gcE-fi-L6c"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="pin" id="RKH-KU-hda">
+                            <connections>
+                                <action selector="addPinClicked:" destination="a7N-Tp-qpa" id="oAY-2q-QCx"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
