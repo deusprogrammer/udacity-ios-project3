@@ -11,7 +11,6 @@ import UIKit
 class OTMapTableViewController: UITableViewController {
     override func viewWillAppear(animated: Bool) {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(OTMapTableViewController.updateContents), name: "trinary.locationsUpdated", object: nil)
-        self.tableView.reloadData()
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -20,8 +19,14 @@ class OTMapTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("TableViewCell")!
-        let location = StudentLocationModel.studentLocations[indexPath.row]
         
+        if (indexPath.row >= StudentLocationModel.studentLocations.count) {
+            cell.textLabel?.text = "Empty"
+            return cell
+        }
+        
+        let location = StudentLocationModel.studentLocations[indexPath.row]
+            
         cell.textLabel?.text = "\(location.lastName), \(location.firstName)"
         
         return cell
